@@ -1,0 +1,142 @@
+--- 
+environment: Hadoop Cluster
+region: us-west-2
+network: 
+  cidr: 172.0.1.0/16
+  subnets:
+   - 
+    cidr: 172.0.1.0/24
+    zone: ~
+
+
+machines: 
+  - 
+    name: DC01
+    cloud-config: Rename-Restart-DCpromo-Workflow.v2.ps1
+    count: 1
+    image-id: ami-59f2d769
+    instance-type: c3.xlarge
+    security-group: test_group
+    key-name: blueprint_new
+    subnet: 172.0.1.0/24
+    private-ip: 172.0.1.50
+    public-ip: true
+    wait: true
+    args: {password: '123@qwe', domainname: test.com, netbiosname: TEST}
+  - 
+    name: MSSQL01
+    cloud-config: Rename-Restart-AddToDomain-Workflow-SQL01.ps1
+    count: 1
+    image-id: ami-11fdd821
+    instance-type: c3.xlarge
+    root_volume: 100
+    security-group: test_group
+    key-name: blueprint_new
+    subnet: 172.0.1.0/24
+    private-ip: 172.0.1.51
+    public-ip: true
+    wait: true
+    args: {password: '123@qwe', dc: 172.0.1.50, dbhost01: MSSQL01, dbhost02: MSSQL02, dbhost03: MSSQL03, domainname: test.com}
+  - 
+    name: MSSQL02
+    cloud-config: Rename-Restart-AddToDomain-Workflow-SQL02.ps1
+    count: 1
+    image-id: ami-11fdd821
+    instance-type: c3.xlarge
+    root_volume: 100
+    security-group: test_group
+    key-name: blueprint_new
+    subnet: 172.0.1.0/24
+    private-ip: 172.0.1.52
+    public-ip: true
+    wait: true
+    args: {password: '123@qwe', dc: 172.0.1.50, dbhost01: MSSQL01, dbhost02: MSSQL02, dbhost03: MSSQL03, domainname: test.com}
+  - 
+    name: MSSQL03
+    cloud-config: Rename-Restart-AddToDomain-Workflow-SQL03.ps1
+    count: 1
+    image-id: ami-11fdd821
+    instance-type: c3.xlarge
+    security-group: test_group
+    key-name: blueprint_new
+    subnet: 172.0.1.0/24
+    private-ip: 172.0.1.53
+    public-ip: true
+    wait: true
+    args: {password: '123@qwe', dc: 172.0.1.50, dbhost01: MSSQL01, dbhost02: MSSQL02, dbhost03: MSSQL03, domainname: test.com}
+  -
+    name: BACKEND
+    cloud-config: Rename-Restart-AddToDomain-Backend.ps1
+    count: 1
+    image-id: ami-535b7863
+    instance-type: c3.xlarge
+    security-group: test_group
+    key-name: blueprint_new
+    subnet: 172.0.1.0/24
+    private-ip: 172.0.1.100
+    public-ip: true
+    wait: true
+    args: {password: '123@qwe', dc: 172.0.1.50, dbhost01: MSSQL01, dbhost02: MSSQL02, domainname: test.com}
+  - 
+    name: FRONTEND
+    cloud-config: Rename-Restart-AddToDomain-FrontEnd.ps1
+    count: 1
+    image-id: ami-535b7863
+    instance-type: c3.xlarge
+    security-group: test_group
+    key-name: blueprint_new
+    subnet: 172.0.1.0/24
+    private-ip: 172.0.1.101
+    public-ip: true
+    wait: true
+    args: {password: '123@qwe', dc: 172.0.1.50, dbhost01: MSSQL01, dbhost02: MSSQL02, domainname: test.com}
+
+security-groups: 
+  - 
+    name: test_group
+    rules: 
+      - 
+        destination: ~
+        from-port: 0
+        protocol: tcp
+        source: 0.0.0.0/0
+        to-port: 65000
+        type: inbound
+      - 
+        destination: ~
+        from-port: 0
+        protocol: udp
+        source: 0.0.0.0/0
+        to-port: 65000
+        type: inbound
+# not implemented
+services: 
+  - 
+    compute-id: ~
+    id: ~
+    install-hook: ~
+    name: ~
+    relationship-hook: 
+      - 
+        links: service-id
+      - 
+        links: service-id
+    start-hook: ~
+    stop-hook: ~
+    type: ~
+# not implemented
+shutdown-sequence: 
+  - 
+    id: ~
+  - 
+    id: ~
+# not implemented
+ssh-key: 
+  key_name: ~
+  key_file: ~
+# not implemented
+startup-sequence: 
+  - 
+    id: "service ids"
+  - 
+    id: ~

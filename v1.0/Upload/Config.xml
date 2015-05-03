@@ -1,0 +1,20 @@
+<Configuration>     
+
+    <Package Id="sts">
+	<Setting Id="SETUPTYPE" Value="CLEAN_INSTALL"/>
+    </Package>
+
+    <Display
+        Level="None"
+        CompletionNotice="No"
+        SuppressModal="Yes"
+        NoCancel="No"
+        AcceptEula="Yes"
+    />
+
+    <Setting Id="SETUPTYPE" Value="CLEAN_INSTALL" />
+    <Setting Id="SERVERROLE" Value="APPLICATION" />
+    <Setting Id="USINGINSTALLMODE" Value="1" />
+    <Setting Id="SETUP_REBOOT" Value="NEVER" />
+
+</Configuration>
